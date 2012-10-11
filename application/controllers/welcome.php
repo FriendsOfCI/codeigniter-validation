@@ -1,27 +1,32 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 
 class Welcome extends CI_Controller {
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -  
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in 
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see http://codeigniter.com/user_guide/general/urls.html
-	 */
 	public function index()
 	{
-		$this->load->view('welcome_message');
+
+		$this->load->library('validation');
+
+		$data = array(
+			'username'	=> '',
+			'password'	=> '123456',
+			'conf_password'	=> '12345',
+			'email'	=> 'email@emailcom'
+		);
+
+		$this->validation->set_data($data);
+
+		$this->validation->set_rules('username','Username','required');
+		$this->validation->set_rules('password','Password','required');
+		$this->validation->set_rules('conf_password','Conf Password','required|matches[password]');
+		$this->validation->set_rules('email','Email','required|valid_email');
+
+		if($this->validation->run() === FALSE)
+		{
+			var_dump($this->validation->show_errors());	
+		}
+		else{
+			echo 'VALID!';
+		}
 	}
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
